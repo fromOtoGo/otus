@@ -6,70 +6,70 @@
 ## Таблицы
 ### companies
 Содержит необходимую информацию о компаниях.
-####indexes
+#### indexes
 В данном виде не требуются, но если добавить поле с местоположением компании, то можно сделать индекс по региону. Кардинальность средняя.
-####companies constraints:
+#### companies constraints:
 name not null, только буквы [A-z] [А-я]
 
 ### contacts
 Содержит список сотрудников, которые представляют(а могут и нет) компанию.
-####indexes
+#### indexes
 Индекс по полю id компании будет иметь высокую кардинальность.
-####contacts constraints:
+#### contacts constraints:
 name только буквы
 phone в формате телефона
 mail в формате почты
 
 ### physycal_access
 Сожержит информацию о посещении клиентами ЦОД для обслуживания своего сервера.
-####physycal_access constraints:
+#### physycal_access constraints:
 came_in not null
 came_out>came_in, came_out=now()
 
 ### employees
 Список сотрудников ЦОД.
-####employees constraints:
+#### employees constraints:
 name not null, только буквы
 
 ### tasks
 Список задач, которые "висят" на сотруднике(например свзяться с клиентом по сделке).
-####indexes
+#### indexes
 Можно добавить индекс по открытым\закрытым задачам, а так же по степени важности. Просрочена\не просрочена.
 Например, используем композитный индекс открыта\закрыта задача и количество просроченных дней. Кардинальность высокая.
-####tasks constraints:
+#### tasks constraints:
 На данный момент все задание содержится в поле info, поэтому info not null
 
 ### leads
 Список сделок, как реализованных, так и в процессе заключения. В процессе движения сделки к заключению договора, для нее будут создаваться задачи на сотрудников.
-####indexes
+#### indexes
 Индекс по этапам сделки. Кардинальность средняя.
-####leads constraints:
+#### leads constraints:
 На данный момент все задание содержится в поле info, поэтому info not null
 
 ### contracts
 Список заключенных контрактов с компаниями.
-####indexes
+#### indexes
 Индекс по действующим контрактам. Кардинальность не высока.
-####contracts constraints:
+#### contracts constraints:
 price>0
 
 ### monthly_pays
 Агрегирует в себе потребление серверов и виртуальных машин. Думаю, эта таблица заменится на noSQL решение, т.к. таблица хранит множество записей по каждой машине за определенный промежуток времени.
-####indexes
+#### indexes
 Композитный индекс по типу контракта(фиксированный или динамичный) и периоде оплаты. Кардинальность средняя.
-####monthly_pays constraints:
+#### monthly_pays constraints:
 amount>0
 
 ### expended_resources
 Хранит данные потребления VM за короткий промежуток времения для выставления месяченого счета по сумме знаечений
-####expended_resources constraints:
+#### expended_resources constraints:
 CPU>=0
 RAM>=0
 HDD>=0
 
 ### leads_history
 Хранит историю перемещения сделки по этапам продаж
-####leads_history constraints:
+#### leads_history constraints:
 stage_started=now()
 stage_type not null
 previous_stage должен существовать id в lead_history
