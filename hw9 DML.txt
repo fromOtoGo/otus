@@ -1,0 +1,46 @@
+insert into new_dc.companies (id, name) values 
+(default, 'astrazenica'),
+(default, 'pfizer'),
+(default, 'sputnik')
+
+insert into new_dc.contacts (name, companies_id) values
+('Elizabeth Alexandra Mary', (select id from new_dc.companies where name='astrazenica')),
+('Joseph Robinette Biden', (select id from new_dc.companies where name='pfizer')),
+('Vladimir Vladimirovich Putin', (select id from new_dc.companies where name='sputnik'))
+
+insert into new_dc.employees (name) values
+('Vasya'),
+('Petya'),
+('Vika')
+
+insert into new_dc.contracts (price, companies_id, employees_id) values
+(1000, (select id from new_dc.companies where name='astrazenica'), (select id from new_dc.employees where name='Vasya')),
+(2000, (select id from new_dc.companies where name='pfizer'), (select id from new_dc.employees where name='Petya')),
+(4000, (select id from new_dc.companies where name='astrazenica'), (select id from new_dc.employees where name='Petya')),
+(12000, (select id from new_dc.companies where name='astrazenica'), (select id from new_dc.employees where name='Vasya')),
+(100, (select id from new_dc.companies where name='sputnik'), (select id from new_dc.employees where name='Vika')),
+(7000, (select id from new_dc.companies where name='sputnik'), (select id from new_dc.employees where name='Vika')),
+(1000, (select id from new_dc.companies where name='sputnik'), (select id from new_dc.employees where name='Vasya')),
+(43000, (select id from new_dc.companies where name='pfizer'), (select id from new_dc.employees where name='Vika'))
+(4300, (select id from new_dc.companies where name='pfizer'), null)
+returning companies_id
+
+select * from new_dc.contracts where price >= 7000 -- контракты с прайсом более 7 тысяч
+
+select * from new_dc.contracts join new_dc.employees
+on new_dc.contracts.employees_id = new_dc.employees.id
+
+select * from new_dc.contracts left join new_dc.employees
+on new_dc.contracts.employees_id = new_dc.employees.id
+
+select * from new_dc.contracts right join new_dc.employees
+on new_dc.contracts.employees_id = new_dc.employees.id
+
+--т.к в contracts есть запись с нулевой реляцией к employees, то в left join будет добавлена эта запись крезультату
+
+update new_dc.contracts set price = 3000 where price < 2000
+
+select * from new_dc.companies join new_dc.employees using (id)
+
+delete from new_dc.contracts where price < 3000
+returning id, price
